@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    </head>
+    <body>
+        <form autocomplete="off">
+            <fieldset>
+                <legend>Options</legend>
+
+                <div class="form-group">
+                    <label for="adapter">Client</label>
+                    <select id="adapter" class="form-control">
+                        <option value="rutorrent">ruTorrent</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="url">URL</label>
+                    <input type="url" class="form-control" id="url">
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password">
+                </div>
+
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="autostart"> Autostart torrents
+                    </label>
+                </div>
+
+                <button type="submit">Save</button>
+            </fieldset>
+        </form>
+
+        <script src="options.js"></script>
+    </body>
+</html>
+
