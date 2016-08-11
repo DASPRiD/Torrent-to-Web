@@ -1,14 +1,15 @@
 {
     "manifest_version": 2,
     "name": "Torrent to Web",
-    "version": "1.0",
+    "version": "1.0.1",
     "description": "Allows to send torrent files to web clients.",
     "icons": {
         "48": "icons/icon-48.png"
     },
     "applications": {
         "gecko": {
-            "id": "torrent-to-web@dasprids.de"
+            "id": "torrent-to-web@dasprids.de",
+            "strict_min_version": "48.0"
         }
     },
     "permissions": [
