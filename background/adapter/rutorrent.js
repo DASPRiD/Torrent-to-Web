@@ -8,7 +8,11 @@ if (typeof torrentToWeb.adapter === 'undefined') {
 
 torrentToWeb.adapter.rutorrent = function(baseUrl, username, password, autostart)
 {
-    baseUrl = baseUrl.replace(/^(https?:\/\/)/, '$1' + username + ':' + password + '@');
+    var baseUrlObject = new URL(baseUrl);
+    baseUrlObject.username = username;
+    baseUrlObject.password = password;
+
+    baseUrl = baseUrlObject.toString();
 
     return {
         send: function(filename, data, callback)
