@@ -24,9 +24,9 @@
     "background": {
         "scripts": [
             "background/main.js",
+            "background/adapter/deluge.js",
             "background/adapter/rutorrent.js",
             "background/adapter/transmission.js"
         ]
     }
 }
-
