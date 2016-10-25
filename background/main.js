@@ -80,8 +80,7 @@ torrentToWeb.determineFilename = function(request)
 
 torrentToWeb.notify = function(message)
 {
-    browser.notifications.create(
-        '',
+    browser.notifications.create('notif',
         {
             type: 'basic',
             iconUrl: chrome.extension.getURL('icons/icon-48.png'),
