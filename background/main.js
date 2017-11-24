@@ -1,15 +1,14 @@
-if (typeof torrentToWeb === 'undefined') {
-    var torrentToWeb = {};
-};
+'use strict';
 
-torrentToWeb.processUrl = function(url, notificationId)
-{
+let torrentToWeb = (typeof torrentToWeb === 'undefined' ? {} : torrentToWeb);
+
+torrentToWeb.processUrl = function (url) {
     torrentToWeb.notify('Retrieving torrent file');
 
-    var request = new XMLHttpRequest();
+    let request = new XMLHttpRequest();
     request.open('GET', url, true);
     request.responseType = 'blob';
-    request.onreadystatechange = function(e) {
+    request.onreadystatechange = function () {
         if (request.readyState !== XMLHttpRequest.DONE) {
             return;
         }
@@ -19,8 +18,8 @@ torrentToWeb.processUrl = function(url, notificationId)
             return;
         }
 
-        var filename = torrentToWeb.determineFilename(request);
-        var extension = filename.split('.').pop();
+        let filename = torrentToWeb.determineFilename(request);
+        let extension = filename.split('.').pop();
 
         if (extension !== 'torrent') {
             torrentToWeb.notify('File is not a torrent');
@@ -28,18 +27,18 @@ torrentToWeb.processUrl = function(url, notificationId)
         }
 
         torrentToWeb.notify('Uploading torrent file');
-        torrentToWeb.createAdapter(function(adapter) {
-            adapter.send(filename, request.response, function(success) {
+        torrentToWeb.createAdapter(function (adapter) {
+            adapter.send(filename, request.response, function (success) {
                 torrentToWeb.notify(success ? 'Torrent file uploaded' : 'Error while uploading torrent file');
             });
         });
     };
+
     request.send(null);
 };
 
-torrentToWeb.createAdapter = function(callback)
-{
-    chrome.storage.local.get(function(options) {
+torrentToWeb.createAdapter = function (callback) {
+    chrome.storage.local.get(function (options) {
         callback(torrentToWeb.adapter[options.adapter](
             options.url,
             options.username,
@@ -49,12 +48,12 @@ torrentToWeb.createAdapter = function(callback)
     });
 };
 
-torrentToWeb.determineFilename = function(request)
-{
-    var filename = null, result;
-    var filenameHeader = request.getResponseHeader('filename');
-    var nameHeader = request.getResponseHeader('name');
-    var contentHeader = request.getResponseHeader('content-disposition');
+torrentToWeb.determineFilename = function (request) {
+    let filename = null;
+    let result;
+    let filenameHeader = request.getResponseHeader('filename');
+    let nameHeader = request.getResponseHeader('name');
+    let contentHeader = request.getResponseHeader('content-disposition');
 
     if (filenameHeader !== null && filenameHeader !== '') {
         console.log('Found filename in "filename" header');
@@ -64,7 +63,7 @@ torrentToWeb.determineFilename = function(request)
         filename = nameHeader;
     } else if (contentHeader !== null && (result = contentHeader.match(/filename=(?:"([^"]+)"|([^;]+);?)/))) {
         console.log('Found filename in "content-disposition" header');
-        filename = (typeof(result[1]) !== 'undefined' ? result[1] : result[2]);
+        filename = (typeof result[1] !== 'undefined' ? result[1] : result[2]);
     } else {
         console.log('Falling back to filename from URL');
         filename = new URL(request.responseURL).pathname.split('/').pop();
@@ -78,8 +77,7 @@ torrentToWeb.determineFilename = function(request)
     return filename;
 };
 
-torrentToWeb.notify = function(message)
-{
+torrentToWeb.notify = function (message) {
     browser.notifications.create(
         '',
         {
@@ -95,10 +93,10 @@ torrentToWeb.notify = function(message)
 chrome.contextMenus.create({
     id: 'send-to-torrent-client',
     title: 'Send to Torrent client',
-    contexts: ['link']
+    contexts: ['link'],
 });
 
-chrome.contextMenus.onClicked.addListener(function(info, tab) {
+chrome.contextMenus.onClicked.addListener(function (info) {
     if (info.menuItemId !== 'send-to-torrent-client') {
         return;
     }
