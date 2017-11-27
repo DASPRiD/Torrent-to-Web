@@ -16,20 +16,15 @@ torrentToWeb.adapter.deluge = function(baseUrl, username, password)
     function getSessionID() {
         var request = new XMLHttpRequest();
             request.open( "POST", baseUrl, true);
-            
+
             request.send(
 		    JSON.stringify({
 			'id': '1',
 			'method': 'auth.login',
 			'params': [password]
-
 		    })
 	    );
-
-        return;
     }
-
-getSessionID();
 
     return {
         send: function(filename, data, callback)
@@ -65,6 +60,5 @@ getSessionID();
         };
 
         request.send(JSON.stringify(requestData));
-
     };
 };
