@@ -79,7 +79,7 @@ torrentToWeb.determineFilename = function (request) {
 
 torrentToWeb.notify = function (message) {
     browser.notifications.create(
-        '',
+        'transfer_notification',
 
         {
             type: 'basic',

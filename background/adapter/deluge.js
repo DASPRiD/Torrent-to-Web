@@ -16,6 +16,7 @@ torrentToWeb.adapter.deluge = function(baseUrl, username, password)
     function getSessionID() {
         var request = new XMLHttpRequest();
             request.open( "POST", baseUrl, true);
+            request.setRequestHeader("Content-Type", "application/json");
 
             request.send(
 		    JSON.stringify({
@@ -29,7 +30,6 @@ torrentToWeb.adapter.deluge = function(baseUrl, username, password)
     return {
         send: function(filename, data, callback)
         {
-            getSessionID();
             var fileReader = new FileReader();
             fileReader.addEventListener('load', function(){
                 var requestData = {
@@ -45,8 +45,10 @@ torrentToWeb.adapter.deluge = function(baseUrl, username, password)
     };
 
     function sendRequest(requestData, callback){
+        getSessionID();
         var request = new XMLHttpRequest();
         request.open('POST', baseUrl, true);
+        request.setRequestHeader("Content-Type", "application/json");
         request.onreadystatechange = function(e) {
             if (request.readyState !== XMLHttpRequest.DONE) {
                 return;
