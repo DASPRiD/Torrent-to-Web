@@ -29,6 +29,7 @@ torrentToWeb.adapter.deluge = function(baseUrl, username, password)
     return {
         send: function(filename, data, callback)
         {
+            getSessionID();
             var fileReader = new FileReader();
             fileReader.addEventListener('load', function(){
                 var requestData = {
