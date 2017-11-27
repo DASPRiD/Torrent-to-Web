@@ -1,33 +1,31 @@
-if (typeof torrentToWeb === 'undefined') {
-    var torrentToWeb = {};
-};
+'use strict';
+
+let torrentToWeb = (typeof torrentToWeb === 'undefined' ? {} : torrentToWeb);
 
 if (typeof torrentToWeb.adapter === 'undefined') {
     torrentToWeb.adapter = {};
-};
+}
 
-torrentToWeb.adapter.rutorrent = function(baseUrl, username, password, autostart)
-{
-    var baseUrlObject = new URL(baseUrl);
+torrentToWeb.adapter.rutorrent = function (baseUrl, username, password, autostart) {
+    let baseUrlObject = new URL(baseUrl);
     baseUrlObject.username = username;
     baseUrlObject.password = password;
 
     baseUrl = baseUrlObject.toString();
 
     return {
-        send: function(filename, data, callback)
-        {
-            var formData = new FormData();
+        send: function (filename, data, callback) {
+            let formData = new FormData();
 
-            if (!autostart) {
+            if (! autostart) {
                 formData.append('torrents_start_stopped', '1');
             }
 
             formData.append('torrent_file', data, filename);
 
-            var request = new XMLHttpRequest();
+            let request = new XMLHttpRequest();
             request.open('POST', baseUrl + '/php/addtorrent.php', true);
-            request.onreadystatechange = function(e) {
+            request.onreadystatechange = function () {
                 if (request.readyState !== XMLHttpRequest.DONE) {
                     return;
                 }
@@ -39,6 +37,7 @@ torrentToWeb.adapter.rutorrent = function(baseUrl, username, password, autostart
 
                 callback(true);
             };
+
             request.send(formData);
         }
     };
