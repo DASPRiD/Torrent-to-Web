@@ -1,6 +1,6 @@
 'use strict';
 
-let torrentToWeb = (typeof torrentToWeb === 'undefined' ? {} : torrentToWeb);
+torrentToWeb = (typeof torrentToWeb === 'undefined' ? {} : torrentToWeb);
 
 if (typeof torrentToWeb.adapter === 'undefined') {
     torrentToWeb.adapter = {};

@@ -1,12 +1,13 @@
 'use strict';
 
-let torrentToWeb = (typeof torrentToWeb === 'undefined' ? {} : torrentToWeb);
+var torrentToWeb = (typeof torrentToWeb === 'undefined' ? {} : torrentToWeb);
 
 torrentToWeb.processUrl = function (url) {
     torrentToWeb.notify('Retrieving torrent file');
 
     let request = new XMLHttpRequest();
     request.open('GET', url, true);
+    request.withCredentials = true;
     request.responseType = 'blob';
     request.onreadystatechange = function () {
         if (request.readyState !== XMLHttpRequest.DONE) {
