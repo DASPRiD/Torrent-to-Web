@@ -1,55 +1,71 @@
-if (typeof torrentToWeb === 'undefined') {
-    var torrentToWeb = {};
-};
+'use strict';
+
+let torrentToWeb = (typeof torrentToWeb === 'undefined' ? {} : torrentToWeb);
 
 if (typeof torrentToWeb.adapter === 'undefined') {
     torrentToWeb.adapter = {};
-};
+}
 
-torrentToWeb.adapter.deluge = function(baseUrl, username, password)
-{
-    var baseUrlObject = new URL(baseUrl);
+torrentToWeb.adapter.deluge = function (baseUrl, username, password, autostart) {
+    let baseUrlObject = new URL(baseUrl);
     baseUrlObject.pathname = '/json';
 
     baseUrl = baseUrlObject.toString();
 
-    function getSessionID() {
-        var request = new XMLHttpRequest();
-            request.open( "POST", baseUrl, true);
-            request.setRequestHeader("Content-Type", "application/json");
+    function login (callback) {
+        let request = new XMLHttpRequest();
+        request.open('POST', baseUrl, true);
+        request.setRequestHeader('Content-Type', 'application/json');
+        request.onreadystatechange = function () {
+            if (request.readyState !== XMLHttpRequest.DONE) {
+                return;
+            }
 
-            request.send(
-		    JSON.stringify({
-			'id': '1',
-			'method': 'auth.login',
-			'params': [password]
-		    })
-	    );
+            if (request.status !== 200) {
+                return;
+            }
+
+            callback();
+        };
+
+        request.send(JSON.stringify({
+            id: '1',
+            method: 'auth.login',
+            params: [password],
+        }));
     }
 
     return {
-        send: function(filename, data, callback)
-        {
-            var fileReader = new FileReader();
-            fileReader.addEventListener('load', function(){
-                var requestData = {
-                    'id': '2',
-                    'method': 'core.add_torrent_file',
-                    'params': [filename, window.btoa(fileReader.result), null]
+        send: function (filename, data, callback) {
+            let fileReader = new FileReader();
+
+            fileReader.addEventListener('load', function () {
+                let options = {};
+
+                if (! autostart) {
+                    options['add_paused'] = true;
+                }
+
+                let requestData = {
+                    id: '2',
+                    method: 'core.add_torrent_file',
+                    params: [filename, window.btoa(fileReader.result), options],
                 };
 
-                sendRequest(requestData, callback, null);
+                login(() => {
+                    sendRequest(requestData, callback, null);
+                });
             });
+
             fileReader.readAsBinaryString(data);
         }
     };
 
-    function sendRequest(requestData, callback){
-        getSessionID();
-        var request = new XMLHttpRequest();
+    function sendRequest (requestData, callback) {
+        let request = new XMLHttpRequest();
         request.open('POST', baseUrl, true);
-        request.setRequestHeader("Content-Type", "application/json");
-        request.onreadystatechange = function(e) {
+        request.setRequestHeader('Content-Type', 'application/json');
+        request.onreadystatechange = function () {
             if (request.readyState !== XMLHttpRequest.DONE) {
                 return;
             }
