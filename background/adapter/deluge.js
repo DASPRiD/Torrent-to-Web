@@ -1,11 +1,5 @@
 'use strict';
 
-let torrentToWeb = (typeof torrentToWeb === 'undefined' ? {} : torrentToWeb);
-
-if (typeof torrentToWeb.adapter === 'undefined') {
-    torrentToWeb.adapter = {};
-}
-
 torrentToWeb.adapter.deluge = function (baseUrl, username, password, autostart) {
     let baseUrlObject = new URL(baseUrl);
     baseUrlObject.pathname = '/json';

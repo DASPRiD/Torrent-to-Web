@@ -1,6 +1,8 @@
 'use strict';
 
-let torrentToWeb = (typeof torrentToWeb === 'undefined' ? {} : torrentToWeb);
+let torrentToWeb = {
+    adapter: {},
+};
 
 torrentToWeb.processUrl = function (url) {
     torrentToWeb.notify('Retrieving torrent file');

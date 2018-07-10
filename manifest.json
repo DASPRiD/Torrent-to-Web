@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Torrent to Web",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "Allows to send torrent files to web clients.",
     "icons": {
         "48": "icons/icon-48.png"
