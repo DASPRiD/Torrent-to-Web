@@ -4,23 +4,21 @@ let torrentToWeb = {
     adapter: {},
 };
 
-torrentToWeb.processUrl = function (url) {
+torrentToWeb.processUrl = function (url, ref) {
     torrentToWeb.notify('Retrieving torrent file');
 
-    let request = new XMLHttpRequest();
-    request.open('GET', url, true);
-    request.responseType = 'blob';
-    request.onreadystatechange = function () {
-        if (request.readyState !== XMLHttpRequest.DONE) {
+    const downloadRequest = new Request(url, {
+        method: 'GET',
+        credentials: 'same-origin',
+        referrer: ref,
+    });
+    return fetch(downloadRequest).then((response) => {
+        if (response.status !== 200) {
+            torrentToWeb.notify('Could not download torrent file:' + response.status);
             return;
         }
 
-        if (request.status !== 200) {
-            torrentToWeb.notify('Could not download torrent file:' + request.status);
-            return;
-        }
-
-        let filename = torrentToWeb.determineFilename(request);
+        let filename = torrentToWeb.determineFilename(response);
         let extension = filename.split('.').pop();
 
         if (extension !== 'torrent') {
@@ -30,13 +28,13 @@ torrentToWeb.processUrl = function (url) {
 
         torrentToWeb.notify('Uploading torrent file');
         torrentToWeb.createAdapter(function (adapter) {
-            adapter.send(filename, request.response, function (success) {
-                torrentToWeb.notify(success ? 'Torrent file uploaded' : 'Error while uploading torrent file');
+            response.blob().then(function (blob) {
+                adapter.send(filename, blob, function (success) {
+                    torrentToWeb.notify(success ? 'Torrent file uploaded' : 'Error while uploading torrent file');
+                });
             });
         });
-    };
-
-    request.send(null);
+    });
 };
 
 torrentToWeb.createAdapter = function (callback) {
@@ -50,12 +48,12 @@ torrentToWeb.createAdapter = function (callback) {
     });
 };
 
-torrentToWeb.determineFilename = function (request) {
+torrentToWeb.determineFilename = function (response) {
     let filename = null;
     let result;
-    let filenameHeader = request.getResponseHeader('filename');
-    let nameHeader = request.getResponseHeader('name');
-    let contentHeader = request.getResponseHeader('content-disposition');
+    let filenameHeader = response.headers.get('filename');
+    let nameHeader = response.headers.get('name');
+    let contentHeader = response.headers.get('content-disposition');
 
     if (filenameHeader !== null && filenameHeader !== '') {
         console.log('Found filename in "filename" header');
@@ -68,7 +66,7 @@ torrentToWeb.determineFilename = function (request) {
         filename = (typeof result[1] !== 'undefined' ? result[1] : result[2]);
     } else {
         console.log('Falling back to filename from URL');
-        filename = new URL(request.responseURL).pathname.split('/').pop();
+        filename = new URL(response.url).pathname.split('/').pop();
     }
 
     filename = filename.replace(/[^0-9a-zA-Z.]+/g, '.');
@@ -104,5 +102,7 @@ chrome.contextMenus.onClicked.addListener(function (info) {
         return;
     }
 
-    torrentToWeb.processUrl(info.linkUrl);
+    // Determine referrer
+    let ref = (info.frameUrl) ? info.frameUrl : info.pageUrl;
+    torrentToWeb.processUrl(info.linkUrl, ref);
 });
