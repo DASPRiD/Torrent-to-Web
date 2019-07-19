@@ -8,14 +8,18 @@ torrentToWeb.adapter.rutorrent = function (baseUrl, username, password, autostar
     baseUrl = baseUrlObject.toString();
 
     return {
-        send: function (filename, data, callback) {
+        send: function (filenameOrUrl, data, callback) {
             let formData = new FormData();
 
             if (! autostart) {
                 formData.append('torrents_start_stopped', '1');
             }
 
-            formData.append('torrent_file', data, filename);
+            if (filenameOrUrl.startsWith('magnet:')) {
+                formData.append('url', filenameOrUrl);
+            } else {
+                formData.append('torrent_file', data, filenameOrUrl);
+            }
 
             let request = new XMLHttpRequest();
             request.open('POST', baseUrl + '/php/addtorrent.php', true);

@@ -30,28 +30,40 @@ torrentToWeb.adapter.deluge = function (baseUrl, username, password, autostart) 
     }
 
     return {
-        send: function (filename, data, callback) {
-            let fileReader = new FileReader();
+        send: function (filenameOrUrl, data, callback) {
+            let options = {};
 
-            fileReader.addEventListener('load', function () {
-                let options = {};
+            if (! autostart) {
+                options['add_paused'] = true;
+            }
 
-                if (! autostart) {
-                    options['add_paused'] = true;
-                }
-
+            if (filenameOrUrl.startsWith('magnet:')) {
                 let requestData = {
                     id: '2',
-                    method: 'core.add_torrent_file',
-                    params: [filename, window.btoa(fileReader.result), options],
+                    method: 'core.add_torrent_magnet',
+                    params: [filenameOrUrl, options],
                 };
 
                 login(() => {
                     sendRequest(requestData, callback, null);
                 });
-            });
+            } else {
+                let fileReader = new FileReader();
 
-            fileReader.readAsBinaryString(data);
+                fileReader.addEventListener('load', function () {
+                    let requestData = {
+                        id: '2',
+                        method: 'core.add_torrent_file',
+                        params: [filenameOrUrl, window.btoa(fileReader.result), options],
+                    };
+
+                    login(() => {
+                        sendRequest(requestData, callback, null);
+                    });
+                });
+
+                fileReader.readAsBinaryString(data);
+            }
         }
     };
 

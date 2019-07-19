@@ -5,36 +5,45 @@ let torrentToWeb = {
 };
 
 torrentToWeb.processUrl = function (url, ref) {
-    torrentToWeb.notify('Retrieving torrent file');
-
-    const downloadRequest = new Request(url, {
-        method: 'GET',
-        credentials: 'same-origin',
-        referrer: ref,
-    });
-    return fetch(downloadRequest).then((response) => {
-        if (response.status !== 200) {
-            torrentToWeb.notify('Could not download torrent file:' + response.status);
-            return;
-        }
-
-        let filename = torrentToWeb.determineFilename(response);
-        let extension = filename.split('.').pop();
-
-        if (extension !== 'torrent') {
-            torrentToWeb.notify('File is not a torrent');
-            return;
-        }
-
-        torrentToWeb.notify('Uploading torrent file');
+    if (url.startsWith('magnet:')) {
+        torrentToWeb.notify('Sending magnet link');
         torrentToWeb.createAdapter(function (adapter) {
-            response.blob().then(function (blob) {
-                adapter.send(filename, blob, function (success) {
-                    torrentToWeb.notify(success ? 'Torrent file uploaded' : 'Error while uploading torrent file');
+            adapter.send(url, null, function (success) {
+                torrentToWeb.notify(success ? 'Magnet link sent' : 'Error while sending magnet link');
+            });
+        });
+    } else {
+        torrentToWeb.notify('Retrieving torrent file');
+
+        const downloadRequest = new Request(url, {
+            method: 'GET',
+            credentials: 'same-origin',
+            referrer: ref,
+        });
+        return fetch(downloadRequest).then((response) => {
+            if (response.status !== 200) {
+                torrentToWeb.notify('Could not download torrent file:' + response.status);
+                return;
+            }
+
+            let filename = torrentToWeb.determineFilename(response);
+            let extension = filename.split('.').pop();
+
+            if (extension !== 'torrent') {
+                torrentToWeb.notify('File is not a torrent');
+                return;
+            }
+
+            torrentToWeb.notify('Uploading torrent file');
+            torrentToWeb.createAdapter(function (adapter) {
+                response.blob().then(function (blob) {
+                    adapter.send(filename, blob, function (success) {
+                        torrentToWeb.notify(success ? 'Torrent file uploaded' : 'Error while uploading torrent file');
+                    });
                 });
             });
         });
-    });
+    }
 };
 
 torrentToWeb.createAdapter = function (callback) {

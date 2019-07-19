@@ -11,21 +11,32 @@ torrentToWeb.adapter.transmission = function (baseUrl, username, password, autos
     baseUrl = baseUrlObject.toString();
 
     return {
-        send: function (filename, data, callback) {
-            let fileReader = new FileReader();
-            fileReader.addEventListener('load', function () {
+        send: function (filenameOrUrl, data, callback) {
+            if (filenameOrUrl.startsWith('magnet:')) {
                 let requestData = {
                     method: 'torrent-add',
                     arguments: {
-                        metainfo: window.btoa(fileReader.result),
+                        filename: filenameOrUrl,
                         paused: ! autostart,
                     },
                 };
-
                 sendRequest(requestData, callback, null);
-            });
+            } else {
+                let fileReader = new FileReader();
+                fileReader.addEventListener('load', function () {
+                    let requestData = {
+                        method: 'torrent-add',
+                        arguments: {
+                            metainfo: window.btoa(fileReader.result),
+                            paused: ! autostart,
+                        },
+                    };
 
-            fileReader.readAsBinaryString(data);
+                    sendRequest(requestData, callback, null);
+                });
+
+                fileReader.readAsBinaryString(data);
+            }
         }
     };
 
