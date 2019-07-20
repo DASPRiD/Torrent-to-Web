@@ -21,22 +21,22 @@ torrentToWeb.adapter.transmission = function (baseUrl, username, password, autos
                     },
                 };
                 sendRequest(requestData, callback, null);
-            } else {
-                let fileReader = new FileReader();
-                fileReader.addEventListener('load', function () {
-                    let requestData = {
-                        method: 'torrent-add',
-                        arguments: {
-                            metainfo: window.btoa(fileReader.result),
-                            paused: ! autostart,
-                        },
-                    };
-
-                    sendRequest(requestData, callback, null);
-                });
-
-                fileReader.readAsBinaryString(data);
+                return;
             }
+            let fileReader = new FileReader();
+            fileReader.addEventListener('load', function () {
+                let requestData = {
+                    method: 'torrent-add',
+                    arguments: {
+                        metainfo: window.btoa(fileReader.result),
+                        paused: ! autostart,
+                    },
+                };
+
+                sendRequest(requestData, callback, null);
+            });
+
+            fileReader.readAsBinaryString(data);
         }
     };
 

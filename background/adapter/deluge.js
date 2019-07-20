@@ -47,23 +47,23 @@ torrentToWeb.adapter.deluge = function (baseUrl, username, password, autostart) 
                 login(() => {
                     sendRequest(requestData, callback, null);
                 });
-            } else {
-                let fileReader = new FileReader();
-
-                fileReader.addEventListener('load', function () {
-                    let requestData = {
-                        id: '2',
-                        method: 'core.add_torrent_file',
-                        params: [filenameOrUrl, window.btoa(fileReader.result), options],
-                    };
-
-                    login(() => {
-                        sendRequest(requestData, callback, null);
-                    });
-                });
-
-                fileReader.readAsBinaryString(data);
+                return;
             }
+            let fileReader = new FileReader();
+
+            fileReader.addEventListener('load', function () {
+                let requestData = {
+                    id: '2',
+                    method: 'core.add_torrent_file',
+                    params: [filenameOrUrl, window.btoa(fileReader.result), options],
+                };
+
+                login(() => {
+                    sendRequest(requestData, callback, null);
+                });
+            });
+
+            fileReader.readAsBinaryString(data);
         }
     };
 
