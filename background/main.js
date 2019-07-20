@@ -5,6 +5,15 @@ let torrentToWeb = {
 };
 
 torrentToWeb.processUrl = function (url, ref) {
+    if (url.startsWith('magnet:')) {
+        torrentToWeb.notify('Sending magnet link');
+        torrentToWeb.createAdapter(function (adapter) {
+            adapter.send(url, null, function (success) {
+                torrentToWeb.notify(success ? 'Magnet link sent' : 'Error while sending magnet link');
+            });
+        });
+        return;
+    }
     torrentToWeb.notify('Retrieving torrent file');
 
     const downloadRequest = new Request(url, {

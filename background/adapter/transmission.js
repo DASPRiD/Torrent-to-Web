@@ -11,7 +11,18 @@ torrentToWeb.adapter.transmission = function (baseUrl, username, password, autos
     baseUrl = baseUrlObject.toString();
 
     return {
-        send: function (filename, data, callback) {
+        send: function (filenameOrUrl, data, callback) {
+            if (filenameOrUrl.startsWith('magnet:')) {
+                let requestData = {
+                    method: 'torrent-add',
+                    arguments: {
+                        filename: filenameOrUrl,
+                        paused: ! autostart,
+                    },
+                };
+                sendRequest(requestData, callback, null);
+                return;
+            }
             let fileReader = new FileReader();
             fileReader.addEventListener('load', function () {
                 let requestData = {
