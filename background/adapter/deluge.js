@@ -49,6 +49,7 @@ torrentToWeb.adapter.deluge = function (baseUrl, username, password, autostart) 
                 });
                 return;
             }
+
             let fileReader = new FileReader();
 
             fileReader.addEventListener('load', function () {

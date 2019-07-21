@@ -23,6 +23,7 @@ torrentToWeb.adapter.transmission = function (baseUrl, username, password, autos
                 sendRequest(requestData, callback, null);
                 return;
             }
+
             let fileReader = new FileReader();
             fileReader.addEventListener('load', function () {
                 let requestData = {
