@@ -57,28 +57,13 @@ torrentToWeb.adapter.qbittorrent = function (baseUrl, username, password, autost
             }
 
             if (filenameOrUrl.startsWith('magnet:')) {
-                installFilter();
-                login().then(() => {
-                    requestData.append('urls', filenameOrUrl + '\n');
-                    sendAddRequest(requestData).then(() => {
-                        logout();
-                        callback(true);
-                    }, (error) => {
-                        console.log(error);
-                        removeFilter();
-                        callback(false);
-                    });
-                }, (error) => {
-                    console.log(error);
-                    removeFilter();
-                    callback(false);
-                });
-                return;
+                requestData.append('urls', filenameOrUrl + '\n');
+            } else {
+                requestData.append('torrents', data, filenameOrUrl);
             }
 
             installFilter();
             login().then(() => {
-                requestData.append('torrents', data, filenameOrUrl);
                 sendAddRequest(requestData).then(() => {
                     logout();
                     callback(true);
@@ -92,6 +77,7 @@ torrentToWeb.adapter.qbittorrent = function (baseUrl, username, password, autost
                 removeFilter();
                 callback(false);
             });
+            return;
         }
     };
 
