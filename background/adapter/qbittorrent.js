@@ -63,7 +63,15 @@ torrentToWeb.adapter.qbittorrent = function (baseUrl, username, password, autost
                     sendAddRequest(requestData).then(() => {
                         logout();
                         callback(true);
+                    }, (error) => {
+                        console.log(error);
+                        removeFilter();
+                        callback(false);
                     });
+                }, (error) => {
+                    console.log(error);
+                    removeFilter();
+                    callback(false);
                 });
                 return;
             }
@@ -74,7 +82,15 @@ torrentToWeb.adapter.qbittorrent = function (baseUrl, username, password, autost
                 sendAddRequest(requestData).then(() => {
                     logout();
                     callback(true);
+                }, (error) => {
+                    console.log(error);
+                    removeFilter();
+                    callback(false);
                 });
+            }, (error) => {
+                console.log(error);
+                removeFilter();
+                callback(false);
             });
         }
     };
