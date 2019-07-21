@@ -17,7 +17,7 @@
   },
   "scripts": {
     "check-cs": "gulp checkCs",
-    "build": "build"
+    "build": "gulp build"
   }
 }
 
