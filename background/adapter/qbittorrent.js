@@ -77,7 +77,6 @@ torrentToWeb.adapter.qbittorrent = function (baseUrl, username, password, autost
                 removeFilter();
                 callback(false);
             });
-            return;
         }
     };
 
