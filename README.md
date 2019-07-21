@@ -6,6 +6,8 @@ An add-on which allows to send torrent files to web clients.
 
 Currently the following clients are supported:
 
-- RuTorrent
+- Deluge
+- qBittorrent
+- ruTorrent
 - Transmission
 

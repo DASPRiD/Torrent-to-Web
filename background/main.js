@@ -12,8 +12,10 @@ torrentToWeb.processUrl = function (url, ref) {
                 torrentToWeb.notify(success ? 'Magnet link sent' : 'Error while sending magnet link');
             });
         });
+
         return;
     }
+
     torrentToWeb.notify('Retrieving torrent file');
 
     const downloadRequest = new Request(url, {
