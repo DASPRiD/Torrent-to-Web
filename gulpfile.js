@@ -2,20 +2,17 @@ const gulp = require('gulp');
 const jscs = require('gulp-jscs');
 const zip = require('gulp-zip');
 
-gulp.task('default', () => {
-    gulp.start('check-cs');
-});
-
-gulp.task('check-cs', () => {
+const checkCs = () => {
     return gulp.src([
         'background/**/*.js',
         'options/**/*.js',
     ], {base: './'})
         .pipe(jscs())
-        .pipe(jscs.reporter());
-});
+        .pipe(jscs.reporter())
+        .pipe(jscs.reporter('fail'));
+};
 
-gulp.task('build', () => {
+const build = () => {
     return gulp.src([
         'background/**/*',
         'icons/**/*',
@@ -25,4 +22,9 @@ gulp.task('build', () => {
     ], {base: './'})
         .pipe(zip('torrent-to-web.xpi'))
         .pipe(gulp.dest('./'));
-});
+};
+
+exports.checkCs = checkCs;
+exports.build = build;
+exports.default = checkCs;
+
