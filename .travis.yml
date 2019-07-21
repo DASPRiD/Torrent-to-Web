@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-    - "8"
+    - "lts/*"
     
 cache:
     directories:
@@ -10,4 +10,5 @@ before_script:
     - npm install
     
 script:
-    - gulp
+    - npm run check-cs
+
