@@ -49,7 +49,7 @@ torrentToWeb.processUrl = function (url, ref) {
 };
 
 torrentToWeb.createAdapter = function (callback) {
-    chrome.storage.local.get(function (options) {
+    browser.storage.local.get(function (options) {
         callback(torrentToWeb.adapter[options.adapter](
             options.url,
             options.username,
@@ -94,7 +94,7 @@ torrentToWeb.notify = function (message) {
 
         {
             type: 'basic',
-            iconUrl: chrome.extension.getURL('icons/icon-48.png'),
+            iconUrl: browser.extension.getURL('icons/icon-48.png'),
             title: 'Torrent to Web',
             message: message,
         }
@@ -102,13 +102,13 @@ torrentToWeb.notify = function (message) {
 };
 
 // Bind context menu item
-chrome.contextMenus.create({
+browser.contextMenus.create({
     id: 'send-to-torrent-client',
     title: 'Send to Torrent client',
     contexts: ['link'],
 });
 
-chrome.contextMenus.onClicked.addListener(function (info) {
+browser.contextMenus.onClicked.addListener(function (info) {
     if (info.menuItemId !== 'send-to-torrent-client') {
         return;
     }
