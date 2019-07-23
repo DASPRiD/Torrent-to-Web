@@ -9,5 +9,5 @@ Currently the following clients are supported:
 - Deluge
 - qBittorrent
 - ruTorrent
-- Transmission
+- Transmission/Vuze/Azureus
 
