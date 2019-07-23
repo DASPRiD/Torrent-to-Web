@@ -1,4 +1,5 @@
 'use strict';
+
 /**
  * This file was taken from https://github.com/themasch/node-bencode/blob/master/lib/decode.js
  * and ported to use native UInt8Array/ArrayBuffer in order to get rid of node dependencies.
@@ -62,7 +63,7 @@ decode.getIntFromBuffer = function (data, start, end) {
     }
 
     return sum * sign;
-}
+};
 
 decode.next = function () {
     switch (decode.data[decode.position]) {

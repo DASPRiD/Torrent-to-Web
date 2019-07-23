@@ -83,7 +83,7 @@ torrentToWeb.determineFilename = function (blob) {
             let torrent;
             try {
                 torrent = decode(buffer);
-            } catch {
+            } catch (error) {
                 resolve(false);
                 return;
             }
