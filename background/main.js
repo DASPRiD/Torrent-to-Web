@@ -117,3 +117,7 @@ browser.contextMenus.onClicked.addListener(function (info) {
     let ref = (info.frameUrl) ? info.frameUrl : info.pageUrl;
     torrentToWeb.processUrl(info.linkUrl, ref);
 });
+
+browser.runtime.onMessage.addListener(function (url) {
+    torrentToWeb.processUrl(url, null);
+});
