@@ -134,12 +134,12 @@ torrentToWeb.adapter.qbittorrent = function (baseUrl, username, password, autost
     }
 
     function installFilter () {
-        chrome.webRequest.onBeforeSendHeaders.addListener(
+        browser.webRequest.onBeforeSendHeaders.addListener(
             sendFilter,
             {urls: [filterUrls]},
             ['blocking', 'requestHeaders']
         );
-        chrome.webRequest.onHeadersReceived.addListener(
+        browser.webRequest.onHeadersReceived.addListener(
             receiveFilter,
             {urls: [filterUrls]},
             ['blocking', 'responseHeaders']
@@ -147,7 +147,7 @@ torrentToWeb.adapter.qbittorrent = function (baseUrl, username, password, autost
     }
 
     function removeFilter () {
-        chrome.webRequest.onHeadersReceived.removeListener(receiveFilter);
-        chrome.webRequest.onBeforeSendHeaders.removeListener(sendFilter);
+        browser.webRequest.onHeadersReceived.removeListener(receiveFilter);
+        browser.webRequest.onBeforeSendHeaders.removeListener(sendFilter);
     }
 };
