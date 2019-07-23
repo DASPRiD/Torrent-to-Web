@@ -50,6 +50,10 @@ torrentToWeb.processUrl = function (url, ref) {
 
 torrentToWeb.createAdapter = function (callback) {
     browser.storage.local.get(function (options) {
+        if (! options.adapter) {
+            torrentToWeb.notify('Error: Missing configuration.');
+        }
+
         callback(torrentToWeb.adapter[options.adapter](
             options.url,
             options.username,
