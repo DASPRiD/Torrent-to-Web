@@ -49,13 +49,15 @@ torrentToWeb.processUrl = function (url, ref) {
 };
 
 torrentToWeb.createAdapter = function (callback) {
-    browser.storage.local.get(function (options) {
+    browser.storage.local.get().then((options) => {
         callback(torrentToWeb.adapter[options.adapter](
             options.url,
             options.username,
             options.password,
             options.autostart
         ));
+    }, (error) => {
+        console.log(error);
     });
 };
 
@@ -94,7 +96,7 @@ torrentToWeb.notify = function (message) {
 
         {
             type: 'basic',
-            iconUrl: browser.extension.getURL('icons/icon-48.png'),
+            iconUrl: browser.runtime.getURL('icons/icon-48.png'),
             title: 'Torrent to Web',
             message: message,
         }
