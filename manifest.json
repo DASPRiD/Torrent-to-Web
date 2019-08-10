@@ -25,6 +25,7 @@
     },
     "background": {
         "scripts": [
+            "background/decode.js",
             "background/main.js",
             "background/adapter/deluge.js",
             "background/adapter/rutorrent.js",

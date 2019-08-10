@@ -1,5 +1,16 @@
 'use strict';
 
+// No need for FileReader anymore.
+// See https://developer.mozilla.org/en-US/docs/Web/API/Blob/arrayBuffer#Polyfill
+Object.defineProperty(Blob.prototype, 'arrayBuffer', {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    value: function arrayBuffer () {
+        return new Response(this).arrayBuffer();
+    },
+});
+
 let torrentToWeb = {
     adapter: {},
 };
@@ -25,23 +36,30 @@ torrentToWeb.processUrl = function (url, ref) {
     });
     return fetch(downloadRequest).then((response) => {
         if (response.status !== 200) {
-            torrentToWeb.notify('Could not download torrent file:' + response.status);
+            torrentToWeb.notify('Could not download torrent file:'
+                                + response.status + response.statustext);
             return;
         }
 
-        let filename = torrentToWeb.determineFilename(response);
-        let extension = filename.split('.').pop();
+        let ctype = response.headers.get('content-type');
 
-        if (extension !== 'torrent') {
-            torrentToWeb.notify('File is not a torrent');
+        if (! ctype.match(/(application\/x-bittorrent|application\/octet-stream)/gi)) {
+            torrentToWeb.notify('Content-Type is invalid');
             return;
         }
 
-        torrentToWeb.notify('Uploading torrent file');
-        torrentToWeb.createAdapter(function (adapter) {
-            response.blob().then(function (blob) {
-                adapter.send(filename, blob, function (success) {
-                    torrentToWeb.notify(success ? 'Torrent file uploaded' : 'Error while uploading torrent file');
+        response.blob().then(function (blob) {
+            torrentToWeb.determineFilename(blob).then(function (filename) {
+                if (filename === false) {
+                    torrentToWeb.notify('File is not a torrent');
+                    return;
+                }
+
+                torrentToWeb.notify('Uploading torrent file');
+                torrentToWeb.createAdapter(function (adapter) {
+                    adapter.send(filename, blob, function (success) {
+                        torrentToWeb.notify(success ? 'Torrent file uploaded' : 'Error while uploading torrent file');
+                    });
                 });
             });
         });
@@ -61,33 +79,30 @@ torrentToWeb.createAdapter = function (callback) {
     });
 };
 
-torrentToWeb.determineFilename = function (response) {
-    let filename = null;
-    let result;
-    let filenameHeader = response.headers.get('filename');
-    let nameHeader = response.headers.get('name');
-    let contentHeader = response.headers.get('content-disposition');
+torrentToWeb.determineFilename = function (blob) {
+    return new Promise((resolve) => {
+        blob.arrayBuffer().then((buffer) => {
+            let torrent;
+            try {
+                torrent = decode(buffer);
+            } catch (error) {
+                resolve(false);
+                return;
+            }
 
-    if (filenameHeader !== null && filenameHeader !== '') {
-        console.log('Found filename in "filename" header');
-        filename = filenameHeader;
-    } else if (nameHeader !== null && nameHeader !== '') {
-        console.log('Found filename in "name" header');
-        filename = nameHeader;
-    } else if (contentHeader !== null && (result = contentHeader.match(/filename=(?:"([^"]+)"|([^;]+);?)/))) {
-        console.log('Found filename in "content-disposition" header');
-        filename = (typeof result[1] !== 'undefined' ? result[1] : result[2]);
-    } else {
-        console.log('Falling back to filename from URL');
-        filename = new URL(response.url).pathname.split('/').pop();
-    }
+            if (torrent.info && (torrent.info.name || torrent.info.name.utf8)) {
+                if (torrent.info.name.utf8) {
+                    resolve(torrent.info.name.utf8);
+                    return;
+                }
 
-    filename = filename.replace(/[^0-9a-zA-Z.]+/g, '.');
-    filename = filename.replace(/\.{2,}/g, '.');
-    filename = filename.replace(/(^\.+|\.+$)/g, '');
+                resolve(torrent.info.name);
+                return;
+            }
 
-    console.log('Using filename "' + filename + '"');
-    return filename;
+            resolve(false);
+        });
+    });
 };
 
 torrentToWeb.notify = function (message) {
