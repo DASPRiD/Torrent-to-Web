@@ -6,6 +6,7 @@ const checkCs = () => {
     return gulp.src([
         'background/**/*.js',
         'options/**/*.js',
+        'content/**/*.js',
     ], {base: './'})
         .pipe(jscs())
         .pipe(jscs.reporter())
@@ -19,6 +20,7 @@ const build = () => {
         'LICENSE',
         'manifest.json',
         'options/**/*',
+        'content/**/*',
     ], {base: './'})
         .pipe(zip('torrent-to-web.xpi'))
         .pipe(gulp.dest('./'));
