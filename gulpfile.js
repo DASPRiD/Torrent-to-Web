@@ -17,6 +17,7 @@ const build = () => {
     return gulp.src([
         'background/**/*',
         'icons/**/*',
+        '!icons/**/*-inkscape.svg',
         'LICENSE',
         'manifest.json',
         'options/**/*',

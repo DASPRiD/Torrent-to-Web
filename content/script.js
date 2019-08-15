@@ -13,7 +13,10 @@ function notifyBackground (e) {
     if (target.href.startsWith('magnet:')) {
         e.stopPropagation();
         e.preventDefault();
-        browser.runtime.sendMessage(target.href);
+        let msg = {
+            magnet: target.href,
+        };
+        browser.runtime.sendMessage(msg);
     }
 }
 

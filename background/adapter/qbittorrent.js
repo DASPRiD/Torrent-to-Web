@@ -68,14 +68,12 @@ torrentToWeb.adapter.qbittorrent = function (baseUrl, username, password, autost
                     logout();
                     callback(true);
                 }, (error) => {
-                    console.log(error);
                     removeFilter();
-                    callback(false);
+                    callback(error);
                 });
             }, (error) => {
-                console.log(error);
                 removeFilter();
-                callback(false);
+                callback(error);
             });
         }
     };
