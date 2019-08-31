@@ -3,45 +3,70 @@
     <head>
         <meta charset="utf-8">
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="options.css">
     </head>
     <body>
         <form autocomplete="off">
             <fieldset>
                 <legend>Options</legend>
+                <div class="container-fluid">
+                    <div class="container profiles">
+                        <div class="form-group">
+                            <label for="profiles">Profiles</label>
+                            <select id="profiles" class="form-control" size="22">
+                            </select>
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label for="adapter">Client</label>
-                    <select id="adapter" class="form-control">
-                        <option value="deluge">Deluge</option>
-                        <option value="qbittorrent">qBittorrent</option>
-                        <option value="rutorrent">ruTorrent</option>
-                        <option value="transmission">Transmission/Vuze/Azureus</option>
-                    </select>
+                    <div class="container profile">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adapter">Client</label>
+                            <select id="adapter" class="form-control">
+                                <option value="deluge">Deluge</option>
+                                <option value="qbittorrent">qBittorrent</option>
+                                <option value="rutorrent">ruTorrent</option>
+                                <option value="transmission">Transmission/Vuze/Azureus</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="url">URL</label>
+                            <input type="url" class="form-control" id="url">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username">
+                        </div>
+
+                        <div class="form-group pwgroup">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password">
+                            <span class="vtoggle">Show</span>
+                        </div>
+
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="magnet"> Use for left-click on magnet links
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="autostart"> Autostart torrents
+                            </label>
+                        </div>
+
+                        <button type="submit" id="save" disabled="disabled">Save</button>
+                        <button disabled="disabled" id="test">Test</button>
+                        <button disabled="disabled" id="remove">Remove</button>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="url">URL</label>
-                    <input type="url" class="form-control" id="url">
-                </div>
-
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" class="form-control" id="username">
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password">
-                </div>
-
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" id="autostart"> Autostart torrents
-                    </label>
-                </div>
-
-                <button type="submit">Save</button>
             </fieldset>
         </form>
 
