@@ -43,7 +43,7 @@ function appendOpt (value) {
     let list = document.querySelector('#profiles');
     let opt = document.createElement('option');
     opt.value = value;
-    opt.innerHTML = value;
+    opt.innerText = value;
     list.appendChild(opt);
     list.value = value;
     showProfile(value);
@@ -245,7 +245,7 @@ document.querySelector('#name').addEventListener('input', nameChanged);
 document.querySelector('#adapter').addEventListener('change', adapterChanged);
 document.querySelector('#url').addEventListener('input', urlChanged);
 document.querySelector('.vtoggle').addEventListener('click', function () {
-    this.innerHTML = (this.innerHTML === 'Show') ? 'Hide' : 'Show';
+    this.innerText = (this.innerText === 'Show') ? 'Hide' : 'Show';
     let pwfield = document.querySelector('#password');
     pwfield.type = (pwfield.type === 'password') ? 'text' : 'password';
 });
