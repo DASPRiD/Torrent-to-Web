@@ -9,6 +9,7 @@
   },
   "homepage": "https://github.com/DASPRiD/Torrent-to-Web#readme",
   "devDependencies": {
+    "addons-linter": "^1.12.1",
     "gulp": "^4.0.2",
     "gulp-cli": "^2.2.0",
     "gulp-jscs": "^4.1.0",
@@ -16,8 +17,7 @@
     "jscs": "^3.0.7"
   },
   "scripts": {
-    "check-cs": "gulp checkCs",
+    "check-cs": "gulp checkCs && addons-linter --warnings-as-errors src",
     "build": "gulp build"
   }
 }
-

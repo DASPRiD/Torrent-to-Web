@@ -4,9 +4,7 @@ const zip = require('gulp-zip');
 
 const checkCs = () => {
     return gulp.src([
-        'background/**/*.js',
-        'options/**/*.js',
-        'content/**/*.js',
+        'src/**/*.js',
     ], {base: './'})
         .pipe(jscs())
         .pipe(jscs.reporter())
@@ -15,13 +13,8 @@ const checkCs = () => {
 
 const build = () => {
     return gulp.src([
-        'background/**/*',
-        'icons/**/*',
-        'LICENSE',
-        'manifest.json',
-        'options/**/*',
-        'content/**/*',
-    ], {base: './'})
+        'src/**/*',
+    ], {base: 'src/'})
         .pipe(zip('torrent-to-web.xpi'))
         .pipe(gulp.dest('./'));
 };
