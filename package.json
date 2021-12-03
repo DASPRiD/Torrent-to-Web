@@ -1,5 +1,6 @@
 {
   "name": "torrent-to-web",
+  "version": "1.4.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DASPRiD/Torrent-to-Web.git"
@@ -9,15 +10,44 @@
   },
   "homepage": "https://github.com/DASPRiD/Torrent-to-Web#readme",
   "devDependencies": {
-    "addons-linter": "^1.12.1",
-    "gulp": "^4.0.2",
-    "gulp-cli": "^2.2.0",
-    "gulp-jscs": "^4.1.0",
-    "gulp-zip": "^5.0.0",
-    "jscs": "^3.0.7"
+    "@parcel/config-webextension": "^2.0.1",
+    "@tsconfig/recommended": "^1.0.1",
+    "eslint": "^8.3.0",
+    "eslint-config-dasprid": "^0.1.1",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.2",
+    "parcel": "^2.0.1",
+    "typescript": "^4.5.2",
+    "web-ext": "^6.5.0",
+    "webextension-polyfill-ts": "^0.26.0"
   },
   "scripts": {
-    "check-cs": "gulp checkCs && addons-linter --warnings-as-errors src",
-    "build": "gulp build"
+    "start": "parcel watch src/manifest.json --host localhost --target webext-dev",
+    "build": "parcel build src/manifest.json --no-source-maps --target webext-prod",
+    "browser": "web-ext run -s dist/",
+    "postbuild": "web-ext build -s ./dist --overwrite-dest",
+    "lint": "eslint src",
+    "lint-fix": "eslint --fix src",
+    "prepare": "husky install"
+  },
+  "targets": {
+    "webext-dev": {
+      "sourceMap": {
+        "inline": true,
+        "inlineSources": true
+      },
+      "distDir": "./dist"
+    },
+    "webext-prod": {
+      "distDir": "./dist"
+    }
+  },
+  "dependencies": {
+    "base64-arraybuffer": "^1.0.1",
+    "bootstrap": "^5.1.3",
+    "zod": "^3.11.6"
+  },
+  "lint-staged": {
+    "*.ts": "eslint --cache --fix"
   }
 }

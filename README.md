@@ -1,13 +1,29 @@
 # Torrent to Web Add-on for Firefox
 
-[![Build Status](https://travis-ci.org/DASPRiD/Torrent-to-Web.svg?branch=master)](https://travis-ci.org/DASPRiD/Torrent-to-Web)
+[![CI](https://github.com/DASPRiD/Torrent-to-Web/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/DASPRiD/Torrent-to-Web/actions/workflows/ci.yml)
 
-An add-on which allows to send torrent files to web clients.
+An add-on which allows sending torrent files to web clients.
 
-Currently the following clients are supported:
+The Add-on currently supports the following clients:
 
 - Deluge
 - qBittorrent
 - ruTorrent
 - Transmission/Vuze/Azureus
 
+## Development
+
+1. Install dependencies:
+    ```bash
+    npm i
+    ```
+
+2. Run continuous build:
+    ```bash
+    npm start
+    ```
+
+3. Start hot-reloading instance in Firefox (use separate terminal):
+    ```bash
+    npm run browser
+    ```

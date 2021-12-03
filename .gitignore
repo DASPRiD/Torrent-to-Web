@@ -1,2 +1,4 @@
-/torrent-to-web.xpi
 /node_modules
+/web-ext-artifacts
+/.parcel-cache
+/dist

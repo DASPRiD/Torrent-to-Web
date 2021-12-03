@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Torrent to Web",
-    "version": "1.4.0",
+    "version": "0",
     "description": "Allows to send torrent files to web clients.",
     "icons": {
         "48": "icons/icon-48.png"
@@ -25,19 +25,16 @@
     },
     "background": {
         "scripts": [
-            "background/decode.js",
-            "background/main.js",
-            "background/adapter/deluge.js",
-            "background/adapter/rutorrent.js",
-            "background/adapter/qbittorrent.js",
-            "background/adapter/transmission.js"
+            "background/main.ts"
         ]
     },
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["content/script.js"]
+            "js": ["content/capture-magnet-links.ts"]
         }
+    ],
+    "web_accessible_resources": [
+        "icons/error.png"
     ]
 }
-
