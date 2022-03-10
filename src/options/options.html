@@ -2,75 +2,73 @@
 <html>
     <head>
         <meta charset="utf-8">
-
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="options.css">
+        <link rel="stylesheet" href="npm:bootstrap/dist/css/bootstrap.min.css"/>
     </head>
     <body>
-        <form autocomplete="off">
-            <fieldset>
-                <legend>Options</legend>
-                <div class="container-fluid">
-                    <div class="container profiles">
-                        <div class="form-group">
-                            <label for="profiles">Profiles</label>
-                            <select id="profiles" class="form-control" size="22">
-                            </select>
-                        </div>
-                    </div>
+        <div class="container-fluid row mt-4 mb-4">
+            <div class="col">
+                <div>
+                    <label for="profiles" class="form-label">Profiles</label>
+                    <select id="profiles" class="form-select mb-3" size="10"></select>
+                    <button class="btn btn-primary" type="button" id="new">New</button>
+                </div>
+            </div>
 
-                    <div class="container profile">
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name">
-                        </div>
+            <form id="form" novalidate="novalidate" class="col-8 border-start">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" required="required">
+                </div>
 
-                        <div class="form-group">
-                            <label for="adapter">Client</label>
-                            <select id="adapter" class="form-control">
-                                <option value="deluge">Deluge</option>
-                                <option value="qbittorrent">qBittorrent</option>
-                                <option value="rutorrent">ruTorrent</option>
-                                <option value="transmission">Transmission/Vuze/Azureus</option>
-                            </select>
-                        </div>
+                <div class="mb-3">
+                    <label for="client" class="form-label">Client</label>
+                    <select id="client" class="form-select">
+                        <option value="deluge">Deluge</option>
+                        <option value="qbittorrent">qBittorrent</option>
+                        <option value="rutorrent">ruTorrent</option>
+                        <option value="transmission">Transmission/Vuze/Azureus</option>
+                    </select>
+                </div>
 
-                        <div class="form-group">
-                            <label for="url">URL</label>
-                            <input type="url" class="form-control" id="url">
-                        </div>
+                <div class="mb-3">
+                    <label for="url" class="form-label">URL</label>
+                    <input type="url" class="form-control" id="url" required="required">
+                </div>
 
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" class="form-control" id="username">
-                        </div>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" required="required">
+                </div>
 
-                        <div class="form-group pwgroup">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password">
-                            <span class="vtoggle">Show</span>
-                        </div>
-
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" id="magnet"> Use for left-click on magnet links
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" id="autostart"> Autostart torrents
-                            </label>
-                        </div>
-
-                        <button type="submit" id="save" disabled="disabled">Save</button>
-                        <button disabled="disabled" id="test">Test</button>
-                        <button disabled="disabled" id="remove">Remove</button>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" required="required">
+                        <button class="btn btn-outline-secondary" type="button" id="passwordToggle">Show</button>
                     </div>
                 </div>
-            </fieldset>
-        </form>
 
-        <script src="options.js"></script>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="handleLeftClick">
+                    <label class="form-check-label" for="handleLeftClick">
+                        Use for left-click on magnet links
+                    </label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="autostart">
+                    <label class="form-check-label" for="handleLeftClick">
+                        Autostart torrents
+                    </label>
+                </div>
+
+                <button class="btn btn-primary" type="submit" id="save">Save</button>
+                <button class="btn btn-secondary" type="button" disabled="disabled" id="test">Test</button>
+                <button class="btn btn-danger" type="button" disabled="disabled" id="remove">Remove</button>
+            </form>
+        </div>
+
+        <script src="options.ts" type="module"></script>
     </body>
 </html>
 
