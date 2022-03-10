@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 type BencodeItem = string | number | BencodeItem[] | {[key : string] : BencodeItem};
 
 class Decoder {
