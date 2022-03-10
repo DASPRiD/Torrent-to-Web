@@ -27,3 +27,8 @@ The Add-on currently supports the following clients:
     ```bash
     npm run browser
     ```
+
+## Build
+
+To build the extension, run `npm run build`, the resulting zip file can then be found in the `web-ext-artifacts`
+directory.
