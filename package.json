@@ -10,10 +10,12 @@
   },
   "homepage": "https://github.com/DASPRiD/Torrent-to-Web#readme",
   "devDependencies": {
+    "@commitlint/cli": "^16.2.1",
+    "@commitlint/config-conventional": "^16.2.1",
     "@parcel/config-webextension": "^2.0.1",
     "@tsconfig/recommended": "^1.0.1",
-    "eslint": "^8.3.0",
-    "eslint-config-dasprid": "^0.1.1",
+    "eslint": "^8.10.0",
+    "eslint-config-dasprid": "^0.1.8",
     "husky": "^7.0.4",
     "lint-staged": "^12.1.2",
     "parcel": "^2.0.1",
@@ -26,6 +28,7 @@
     "build": "parcel build src/manifest.json --no-source-maps --target webext-prod",
     "browser": "web-ext run -s dist/",
     "postbuild": "web-ext build -s ./dist --overwrite-dest",
+    "postversion": "git push && git push --tags",
     "lint": "eslint src",
     "lint-fix": "eslint --fix src",
     "prepare": "husky install"

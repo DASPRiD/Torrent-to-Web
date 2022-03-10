@@ -34,6 +34,10 @@ const updateUsernameInput = () => {
     usernameInput.disabled = (clientSelect.value === 'deluge');
 };
 
+clientSelect.addEventListener('change', () => {
+    updateUsernameInput();
+});
+
 const selectProfile = (profileId : number | undefined) => {
     currentProfile = profileId ? profiles.find(profile => profile.id === profileId) : undefined;
     profileSelect.value = currentProfile ? currentProfile.id.toString() : '';
