@@ -1,6 +1,12 @@
 import {browser} from 'webextension-polyfill-ts';
 import type {WebRequest} from 'webextension-polyfill-ts';
 
+const urlToPattern = (originalUrl : string) => {
+    const url = new URL(originalUrl);
+    url.port = '';
+    return url.toString();
+};
+
 export const fetchExtractCookies = async (request : Request) : Promise<[Response, string]> => {
     let cookies = '';
 
@@ -17,7 +23,7 @@ export const fetchExtractCookies = async (request : Request) : Promise<[Response
 
     browser.webRequest.onHeadersReceived.addListener(
         extractCookies,
-        {urls: [request.url]},
+        {urls: [urlToPattern(request.url)]},
         ['blocking', 'responseHeaders'],
     );
 
@@ -38,7 +44,7 @@ export const fetchWithCookies = async (request : Request, cookies : string) : Pr
 
     browser.webRequest.onBeforeSendHeaders.addListener(
         injectCookies,
-        {urls: [request.url]},
+        {urls: [urlToPattern(request.url)]},
         ['blocking', 'requestHeaders'],
     );
 
@@ -62,7 +68,7 @@ export const spoofOrigin = async <T>(runner : () => Promise<T>, urls : string[],
 
     browser.webRequest.onBeforeSendHeaders.addListener(
         spoofHeaders,
-        {urls},
+        {urls: urls.map(urlToPattern)},
         ['blocking', 'requestHeaders'],
     );
 

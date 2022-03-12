@@ -38,7 +38,7 @@ export default class QBittorrent implements Client {
                 const cookies = await this.login();
 
                 const url = new URL(this.config.url);
-                url.pathname += '/api/v2/torrents/add';
+                url.pathname = url.pathname.replace(/\/$/, '') + '/api/v2/torrents/add';
 
                 const response = await fetchWithCookies(new Request(url.toString(), {
                     method: 'POST',
@@ -50,8 +50,8 @@ export default class QBittorrent implements Client {
                 }
             },
             [
-                `${this.config.url}/api/vs/auth/login`,
-                `${this.config.url}/api/vs/torrents/add`,
+                `${this.config.url}/api/v2/auth/login`,
+                `${this.config.url}/api/v2/torrents/add`,
             ],
             `${origin.protocol}//${origin.host}`,
         );
@@ -59,12 +59,12 @@ export default class QBittorrent implements Client {
 
     private async login() : Promise<string> {
         const url = new URL(this.config.url);
-        url.pathname += '/api/v2/auth/login';
+        url.pathname = url.pathname.replace(/\/$/, '') + '/api/v2/auth/login';
 
         const [response, cookies] = await fetchExtractCookies(new Request(url.toString(), {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: new URLSearchParams({
                 username: this.config.username,
