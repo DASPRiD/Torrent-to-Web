@@ -31,7 +31,7 @@ export default class RuTorrent implements Client {
 
     private async sendRequest(formData : FormData) : Promise<void> {
         const url = new URL(this.config.url);
-        url.pathname += '/php/addtorrent.php';
+        url.pathname = url.pathname.replace(/\/$/, '') + '/php/addtorrent.php';
 
         const response = await fetch(url.toString(), {
             method: 'POST',

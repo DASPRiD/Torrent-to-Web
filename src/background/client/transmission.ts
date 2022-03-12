@@ -34,7 +34,7 @@ export default class Transmission implements Client {
         const url = new URL(this.config.url);
 
         if (!url.pathname.endsWith('/transmission')) {
-            url.pathname += '/transmission';
+            url.pathname = url.pathname.replace(/\/$/, '') + '/transmission';
         }
 
         url.pathname += '/rpc';

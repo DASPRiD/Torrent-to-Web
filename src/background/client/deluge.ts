@@ -9,7 +9,7 @@ export default class Deluge implements Client {
     public constructor(config : ClientConfig) {
         this.config = config;
         this.url = new URL(this.config.url);
-        this.url.pathname += '/json';
+        this.url.pathname = this.url.pathname.replace(/\/$/, '') + '/json';
     }
 
     public async sendTorrent(filename : string, torrent : Blob) : Promise<void> {
