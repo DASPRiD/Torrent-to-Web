@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/DASPRiD/Torrent-to-Web/compare/v2.0.1...v2.0.2) (2022-03-12)
+
+
+### Bug Fixes
+
+* **client:** transform URLs to URL patterns for request introspection ([cf1aca3](https://github.com/DASPRiD/Torrent-to-Web/commit/cf1aca3d786219fbbdf20515fb8ac5e7e59cd35a)), closes [#46](https://github.com/DASPRiD/Torrent-to-Web/issues/46)
+* remove trailing slash from URLs before concatinating ([07f963a](https://github.com/DASPRiD/Torrent-to-Web/commit/07f963a3a73ba621c31d6a04bde9d7ea478d6d84))
+
 ### [2.0.1](https://github.com/DASPRiD/Torrent-to-Web/compare/v2.0.0...v2.0.1) (2022-03-10)
 
 
