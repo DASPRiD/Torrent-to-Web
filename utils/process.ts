@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { decode } from "./bencode";
-import type { Client } from "./client";
+import type { Client, SendOptions } from "./client";
 import { clients } from "./client";
 import { getProfiles } from "./profiles";
 import { ProgressNotification } from "./progressNotification";
@@ -40,7 +40,11 @@ const createClient = async (profileId: number): Promise<Client> => {
     return new clientConstructor(profile);
 };
 
-const processMagnetUrl = async (url: string, profileId: number | undefined): Promise<void> => {
+const processMagnetUrl = async (
+    url: string,
+    profileId: number | undefined,
+    options: SendOptions,
+): Promise<void> => {
     const notification = await ProgressNotification.create("Sending magnet URL to client(s)");
     let clients: Client[];
 
@@ -61,7 +65,7 @@ const processMagnetUrl = async (url: string, profileId: number | undefined): Pro
 
     for (const client of clients) {
         try {
-            await client.sendMagnetUrl(url);
+            await client.sendMagnetUrl(url, options);
         } catch (error) {
             await notification.error("Failed to send magnet URL to client");
             console.debug(`Send error: ${error instanceof Error ? error.toString() : "Unknown"}`);
@@ -75,6 +79,7 @@ const processTorrent = async (
     url: string,
     referrer: string | undefined,
     profileId: number,
+    options: SendOptions,
 ): Promise<void> => {
     const notification = await ProgressNotification.create("Retrieving torrent file");
 
@@ -114,7 +119,7 @@ const processTorrent = async (
     const client = await createClient(profileId);
 
     try {
-        await client.sendTorrent(filename, blob);
+        await client.sendTorrent(filename, blob, options);
     } catch (error) {
         await notification.error("Failed to send torrent to client");
         console.debug(`Send error: ${error instanceof Error ? error.toString() : "Unknown"}`);
@@ -128,14 +133,15 @@ export const processUrl = async (
     url: string,
     referrer: string | undefined,
     profileId: number | undefined,
+    options: SendOptions,
 ): Promise<void> => {
     if (url.startsWith("magnet:")) {
-        return processMagnetUrl(url, profileId);
+        return processMagnetUrl(url, profileId, options);
     }
 
     if (!profileId) {
         throw new Error("Non magnet links require a profile ID");
     }
 
-    return processTorrent(url, referrer, profileId);
+    return processTorrent(url, referrer, profileId, options);
 };

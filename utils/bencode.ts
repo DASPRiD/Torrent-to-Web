@@ -139,14 +139,33 @@ class Decoder {
                 // fromCodePoint rather than fromCharCode. Lead bytes of 0x80 to 0xbf still fall
                 // through and are skipped, because torrent names are not reliably utf-8 and
                 // rejecting them outright would fail uploads that currently succeed.
-                case 15:
-                    result += String.fromCodePoint(
+                //
+                // Binary fields such as the piece hashes flow through here as well, so invalid
+                // lead bytes (above 0xf4), sequences cut off by the end of the buffer, and code
+                // points beyond the Unicode range are skipped in the same way rather than thrown
+                // on, which fromCodePoint would otherwise do.
+                case 15: {
+                    if (character > 0xf4) {
+                        break;
+                    }
+
+                    if (position + 3 > data.length) {
+                        position = data.length;
+                        break;
+                    }
+
+                    const codePoint =
                         ((character & 0x07) << 18) |
-                            ((nextByte() & 0x3f) << 12) |
-                            ((nextByte() & 0x3f) << 6) |
-                            (nextByte() & 0x3f),
-                    );
+                        ((nextByte() & 0x3f) << 12) |
+                        ((nextByte() & 0x3f) << 6) |
+                        (nextByte() & 0x3f);
+
+                    if (codePoint <= 0x10ffff) {
+                        result += String.fromCodePoint(codePoint);
+                    }
+
                     break;
+                }
             }
         }
 
