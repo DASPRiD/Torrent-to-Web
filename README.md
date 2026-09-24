@@ -16,20 +16,15 @@ The Add-on currently supports the following clients:
 
 1. Install dependencies:
     ```bash
-    npm i
+    pnpm install
     ```
 
-2. Run continuous build:
+2. Start a continuous build with a hot-reloading instance of Firefox:
     ```bash
-    npm start
-    ```
-
-3. Start hot-reloading instance in Firefox (use separate terminal):
-    ```bash
-    npm run browser
+    pnpm start
     ```
 
 ## Build
 
-To build the extension, run `npm run build`, the resulting zip file can then be found in the `web-ext-artifacts`
-directory.
+To build the extension, run `pnpm build`. To package it, run `pnpm zip`, the resulting zip file can then be found
+in the `.output` directory.
