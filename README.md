@@ -7,6 +7,7 @@ An add-on which allows sending torrent files to web clients.
 The Add-on currently supports the following clients:
 
 - Deluge
+- Flood
 - qBittorrent
 - ruTorrent
 - Transmission/Vuze/Azureus

@@ -1,4 +1,5 @@
 import { Deluge } from "./deluge";
+import { Flood } from "./flood";
 import { QBittorrent } from "./qbittorrent";
 import { RuTorrent } from "./ruTorrent";
 import { Transmission } from "./transmission";
@@ -17,6 +18,7 @@ export type Client = {
 
 export const clients = {
     deluge: Deluge,
+    flood: Flood,
     qbittorrent: QBittorrent,
     rutorrent: RuTorrent,
     transmission: Transmission,
