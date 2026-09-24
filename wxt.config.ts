@@ -13,7 +13,7 @@ export default defineConfig({
         browser_specific_settings: {
             gecko: {
                 id: "torrent-to-web@dasprids.de",
-                strict_min_version: "57.0",
+                strict_min_version: "115.0",
             },
         },
         permissions: [
