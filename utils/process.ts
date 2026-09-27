@@ -1,16 +1,18 @@
 import { z } from "zod";
-import { decode } from "./bencode";
+import { decode, decodeText } from "./bencode";
 import type { Client } from "./client";
 import { clients } from "./client";
 import { getProfiles } from "./profiles";
 import { ProgressNotification } from "./progressNotification";
 
+const nameSchema = z.instanceof(Uint8Array).transform(decodeText);
+
 const torrentSchema = z.object({
     info: z.object({
         name: z.union([
-            z.string(),
+            nameSchema,
             z.object({
-                utf8: z.string(),
+                utf8: nameSchema,
             }),
         ]),
     }),

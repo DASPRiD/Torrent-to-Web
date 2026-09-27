@@ -1,4 +1,14 @@
-type BencodeItem = string | number | BencodeItem[] | { [key: string]: BencodeItem };
+type BencodeItem = Uint8Array | number | BencodeItem[] | { [key: string]: BencodeItem };
+
+const textDecoder = new TextDecoder();
+
+/**
+ * Reads a bencode byte string as utf-8 text.
+ *
+ * Invalid sequences become replacement characters instead of throwing. Torrent names are not
+ * reliably utf-8, and a slightly mangled name still uploads.
+ */
+export const decodeText = (data: Uint8Array): string => textDecoder.decode(data);
 
 class Decoder {
     private readonly data: Uint8Array;
@@ -39,7 +49,8 @@ class Decoder {
         const dictionary: Record<string, BencodeItem> = {};
 
         while (this.data[this.position] !== this.endOfType) {
-            dictionary[this.buffer()] = this.next();
+            const key = decodeText(this.buffer());
+            dictionary[key] = this.next();
         }
 
         ++this.position;
@@ -65,13 +76,20 @@ class Decoder {
         return number;
     }
 
-    private buffer(): string {
+    private buffer(): Uint8Array {
         let separatorPosition = this.find(this.stringDelimiter);
         const length = this.getInt(this.position, separatorPosition);
         const end = ++separatorPosition + length;
+
+        if (end > this.data.length) {
+            throw new Error(
+                `Invalid data: Byte string of length ${length} at index ${separatorPosition} exceeds input`,
+            );
+        }
+
         this.position = end;
 
-        return this.toString(this.data.slice(separatorPosition, end));
+        return this.data.slice(separatorPosition, end);
     }
 
     private find(character: number): number {
@@ -88,69 +106,6 @@ class Decoder {
         throw new Error(
             `Invalid data: Missing delimiter "${String.fromCharCode(character)}" [0x${character.toString(16)}]`,
         );
-    }
-
-    private toString(data: Uint8Array): string {
-        let result = "";
-        let position = 0;
-
-        // A missing continuation byte reads as undefined, and `undefined & 0x3f` is 0, so a
-        // truncated sequence would otherwise decode to a plausible but wrong character instead
-        // of failing.
-        const nextByte = (): number => {
-            const byte = data[position++];
-
-            if (byte === undefined) {
-                throw new Error("Invalid data: Truncated UTF-8 sequence");
-            }
-
-            return byte;
-        };
-
-        while (position < data.length) {
-            const character = nextByte();
-
-            switch (character >> 4) {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                    result += String.fromCharCode(character);
-                    break;
-
-                case 12:
-                case 13:
-                    result += String.fromCharCode(((character & 0x1f) << 6) | (nextByte() & 0x3f));
-                    break;
-
-                case 14:
-                    result += String.fromCharCode(
-                        ((character & 0x0f) << 12) |
-                            ((nextByte() & 0x3f) << 6) |
-                            ((nextByte() & 0x3f) << 0),
-                    );
-                    break;
-
-                // Four byte sequences carry everything outside the basic plane, so this needs
-                // fromCodePoint rather than fromCharCode. Lead bytes of 0x80 to 0xbf still fall
-                // through and are skipped, because torrent names are not reliably utf-8 and
-                // rejecting them outright would fail uploads that currently succeed.
-                case 15:
-                    result += String.fromCodePoint(
-                        ((character & 0x07) << 18) |
-                            ((nextByte() & 0x3f) << 12) |
-                            ((nextByte() & 0x3f) << 6) |
-                            (nextByte() & 0x3f),
-                    );
-                    break;
-            }
-        }
-
-        return result;
     }
 
     private getInt(start: number, end: number): number {
