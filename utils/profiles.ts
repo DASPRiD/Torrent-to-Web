@@ -10,6 +10,7 @@ const profileSchema = z.object({
     password: z.string(),
     autostart: z.boolean(),
     handleLeftClick: z.boolean(),
+    labels: z.string().array().default([]),
 });
 
 const profilesSchema = profileSchema.array();

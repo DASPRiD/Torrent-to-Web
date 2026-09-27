@@ -1,36 +1,42 @@
-import type { Client, ClientConfig } from "./index";
+import type { Client, ClientConfig, SendOptions } from "./index";
 import { fetchExtractCookies, fetchWithCookies, spoofOrigin } from "./utils";
 
 const loginPath = "/api/v2/auth/login";
 const addTorrentPath = "/api/v2/torrents/add";
 
 export class QBittorrent implements Client {
+    public static readonly supportsLabels = true;
+
     private readonly config: ClientConfig;
 
     public constructor(config: ClientConfig) {
         this.config = config;
     }
 
-    public async sendTorrent(filename: string, torrent: Blob): Promise<void> {
+    public async sendTorrent(filename: string, torrent: Blob, options: SendOptions): Promise<void> {
         const formData = new FormData();
         formData.set("torrents", torrent, filename);
-
-        if (!this.config.autostart) {
-            formData.set("paused", "true");
-        }
+        this.applyCommonFields(formData, options);
 
         return this.sendRequest(formData);
     }
 
-    public async sendMagnetUrl(url: string): Promise<void> {
+    public async sendMagnetUrl(url: string, options: SendOptions): Promise<void> {
         const formData = new FormData();
         formData.set("urls", `${url}\n`);
+        this.applyCommonFields(formData, options);
 
+        return this.sendRequest(formData);
+    }
+
+    private applyCommonFields(formData: FormData, options: SendOptions): void {
         if (!this.config.autostart) {
             formData.set("paused", "true");
         }
 
-        return this.sendRequest(formData);
+        if (options.label !== undefined) {
+            formData.set("category", options.label);
+        }
     }
 
     // The spoofOrigin patterns have to be built the same way as the requests they are meant to

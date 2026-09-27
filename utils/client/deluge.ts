@@ -3,6 +3,8 @@ import type { Client, ClientConfig } from "./index";
 import { fetchExtractCookies, fetchWithCookies } from "./utils";
 
 export class Deluge implements Client {
+    public static readonly supportsLabels = false;
+
     private readonly config: ClientConfig;
     private readonly url: URL;
 
