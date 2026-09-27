@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/) for commit guidelines.
 
+## [2.1.1](https://github.com/DASPRiD/Torrent-to-Web/compare/torrent-to-web-v2.1.0...torrent-to-web-v2.1.1) (2026-09-27)
+
+
+### Bug Fixes
+
+* **bencode:** return byte strings as raw bytes ([e668d0a](https://github.com/DASPRiD/Torrent-to-Web/commit/e668d0ae03ecc07125c5964e3381c97a9fca266b))
+* read the name.utf-8 key that torrents actually use ([25be5c1](https://github.com/DASPRiD/Torrent-to-Web/commit/25be5c1a35b3fd071a87f09eebe5ff20b5ac3933))
+
 ## [2.1.0](https://github.com/DASPRiD/Torrent-to-Web/compare/torrent-to-web-v2.0.2...torrent-to-web-v2.1.0) (2026-09-24)
 
 
