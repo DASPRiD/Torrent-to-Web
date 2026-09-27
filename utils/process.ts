@@ -9,12 +9,10 @@ const nameSchema = z.instanceof(Uint8Array).transform(decodeText);
 
 const torrentSchema = z.object({
     info: z.object({
-        name: z.union([
-            nameSchema,
-            z.object({
-                utf8: nameSchema,
-            }),
-        ]),
+        name: nameSchema,
+        // Clients whose `name` is not utf-8 write a `name.utf-8` sibling alongside it. The
+        // suffixed key is a de-facto extension rather than part of BEP-0003, so it is optional.
+        "name.utf-8": nameSchema.optional(),
     }),
 });
 
@@ -23,11 +21,7 @@ const determineFilename = async (blob: Blob): Promise<string> => {
     const data = new Uint8Array(arrayBuffer);
     const torrent = torrentSchema.parse(decode(data));
 
-    if (typeof torrent.info.name === "string") {
-        return torrent.info.name;
-    }
-
-    return torrent.info.name.utf8;
+    return torrent.info["name.utf-8"] ?? torrent.info.name;
 };
 
 const createClient = async (profileId: number): Promise<Client> => {
