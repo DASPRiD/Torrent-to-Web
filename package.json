@@ -43,7 +43,7 @@
   "dependencies": {
     "base64-arraybuffer": "^1.0.1",
     "bootstrap": "^5.1.3",
-    "zod": "^4.6.5"
+    "zod": "^4.6.6"
   },
   "type": "module"
 }
